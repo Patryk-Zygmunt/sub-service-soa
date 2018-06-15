@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
-    @Query("select s from Subscription s WHERE s.from.cityId = :from AND s.to.cityId in (:to) AND (s.date is null OR s.date = :date)")
+    @Query("select s from Subscription s WHERE s.fromId = :from AND s.toId in (:to) AND (s.date is null OR (s.date between :date and :date2))")
     List<Subscription> findSubscriptions(@Param(value = "from") Long from, @Param(value = "to") List<Long> to,
-            @Param(value = "date") Date date);
+            @Param(value = "date") Date date, @Param(value = "date2") Date date2);
 
 }

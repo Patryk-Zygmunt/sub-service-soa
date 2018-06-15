@@ -10,8 +10,8 @@ public class Subscription {
     private Long subscriptionId;
     private String subscriber;
     private String email;
-    private City from;
-    private City to;
+    private Long fromId;
+    private Long toId;
     private Date date;
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
@@ -45,22 +45,20 @@ public class Subscription {
         this.email = email;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    public City getFrom() {
-        return from;
+    public Long getFromId() {
+        return fromId;
     }
 
-    public void setFrom(City from) {
-        this.from = from;
+    public void setFromId(Long fromId) {
+        this.fromId = fromId;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    public City getTo() {
-        return to;
+    public Long getToId() {
+        return toId;
     }
 
-    public void setTo(City to) {
-        this.to = to;
+    public void setToId(Long toId) {
+        this.toId = toId;
     }
 
     public Date getDate() {

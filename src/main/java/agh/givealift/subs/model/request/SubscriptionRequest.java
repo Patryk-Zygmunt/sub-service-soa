@@ -1,6 +1,6 @@
 package agh.givealift.subs.model.request;
 
-import agh.givealift.subs.model.entity.City;
+
 import agh.givealift.subs.model.enums.NotificationType;
 
 import java.util.Date;
@@ -8,8 +8,8 @@ import java.util.Date;
 public class SubscriptionRequest {
     private String subscriber;
     private String email;
-    private City cityFrom;
-    private City cityTo;
+    private Long fromId;
+    private Long toId;
     private Date date;
     private NotificationType notificationType;
 
@@ -48,19 +48,19 @@ public class SubscriptionRequest {
         this.notificationType = notificationType;
     }
 
-    public City getCityFrom() {
-        return cityFrom;
+    public Long getFromId() {
+        return fromId;
     }
 
-    public void setCityFrom(City cityFrom) {
-        this.cityFrom = cityFrom;
+    public void setFromId(Long fromId) {
+        this.fromId = fromId;
     }
 
-    public City getCityTo() {
-        return cityTo;
+    public Long getToId() {
+        return toId;
     }
 
-    public void setCityTo(City cityTo) {
-        this.cityTo = cityTo;
+    public void setToId(Long toId) {
+        this.toId = toId;
     }
 }

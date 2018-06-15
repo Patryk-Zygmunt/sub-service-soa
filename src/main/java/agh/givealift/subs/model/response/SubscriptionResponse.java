@@ -1,6 +1,6 @@
 package agh.givealift.subs.model.response;
 
-import agh.givealift.subs.model.entity.City;
+import agh.givealift.subs.model.City;
 import agh.givealift.subs.model.enums.NotificationType;
 
 import java.util.Date;

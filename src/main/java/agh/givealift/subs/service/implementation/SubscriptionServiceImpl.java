@@ -1,10 +1,10 @@
 package agh.givealift.subs.service.implementation;
 
 import agh.givealift.subs.configuration.Configuration;
+import agh.givealift.subs.model.City;
 import agh.givealift.subs.model.Localization;
 import agh.givealift.subs.model.Route;
 import agh.givealift.subs.model.Tuple;
-import agh.givealift.subs.model.entity.City;
 import agh.givealift.subs.model.entity.Subscription;
 import agh.givealift.subs.model.enums.DeviceType;
 import agh.givealift.subs.model.enums.NotificationType;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,8 +62,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscription.setEmail(subscriptionRequest.getSubscriber());
             subscription.setDate(subscriptionRequest.getDate());
             subscription.setNotificationType(subscriptionRequest.getNotificationType());
-            subscription.setFrom(subscriptionRequest.getCityFrom());
-            subscription.setTo(subscriptionRequest.getCityTo());
+        subscription.setFromId(subscriptionRequest.getFromId());
+        subscription.setToId(subscriptionRequest.getToId());
 
             subscription = subscriptionRepository.save(subscription);
             cod.c().addShowToString(NotificationType.class, DeviceType.class).i("ADDED SUBSCRIPTION: ", subscription);
@@ -127,7 +128,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             Long l = t.getLeft().getCity().getCityId();
             List<Long> r = t.getRight();
-            List<Subscription> subs = subscriptionRepository.findSubscriptions(l, r, cDate);
+            Date dayAfter = new Date(cDate.getTime() + TimeUnit.DAYS.toMillis(1));
+            List<Subscription> subs = subscriptionRepository.findSubscriptions(l, r, cDate, dayAfter);
             cod.i(" | l:" + l +
                             " | r: " + r +
                             " | date: " + new SimpleDateFormat(Configuration.DATA_PATTERN).format(date) +
@@ -180,9 +182,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         response.setSubscriber(subscription.getSubscriber());
         response.setEmail(subscription.getEmail());
         response.setDate(subscription.getDate());
-        response.setFrom(subscription.getFrom());
+        response.setFrom(new City());
         response.setNotificationType(subscription.getNotificationType());
-        response.setTo(subscription.getTo());
+        response.setTo(new City());
         return response;
 
 

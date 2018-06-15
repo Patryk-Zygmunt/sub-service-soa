@@ -1,19 +1,12 @@
-package agh.givealift.subs.model.entity;
+package agh.givealift.subs.model;
 
-import org.springframework.lang.NonNull;
 
-import javax.persistence.*;
-
-@Entity
 public class City {
     private Long cityId;
     private String name;
     private String country;
     private String province;
-   
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getCityId() {
         return cityId;
     }

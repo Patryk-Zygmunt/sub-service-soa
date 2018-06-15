@@ -1,6 +1,6 @@
 package agh.givealift.subs.model;
 
-import agh.givealift.subs.model.entity.City;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import java.util.Date;
 public class Localization {
     private City city;
     private String placeOfMeeting;
-    private Date date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm") private Date date;
     public City getCity() {
         return city;
     }
