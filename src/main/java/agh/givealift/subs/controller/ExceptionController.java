@@ -15,7 +15,7 @@ public class ExceptionController {
     
         @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> authExc() {
-        return new ResponseEntity<>("Błędny login lub hasło", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
     
 

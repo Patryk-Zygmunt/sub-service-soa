@@ -4,6 +4,7 @@ import agh.givealift.subs.model.Route;
 import agh.givealift.subs.model.request.SubscriptionRequest;
 import agh.givealift.subs.model.response.SubscriptionResponse;
 import agh.givealift.subs.service.SubscriptionService;
+import agh.givealift.subs.service.implementation.ValidationService;
 import com.stefanik.cod.controller.COD;
 import com.stefanik.cod.controller.CODFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,11 +25,15 @@ import java.util.stream.Collectors;
 public class SubscriptionController {
     private static final COD cod = CODFactory.get();
     private final SubscriptionService subscriptionService;
+    private ValidationService validationService;
 
     @Autowired
-    public SubscriptionController(SubscriptionService subscriptionService) {
+    public SubscriptionController(SubscriptionService subscriptionService, ValidationService validationService) {
         this.subscriptionService = subscriptionService;
+        this.validationService = validationService;
     }
+
+
 
     
     @PostMapping(value = "/notify")
@@ -38,7 +44,10 @@ public class SubscriptionController {
     
     
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Long> add(@RequestBody SubscriptionRequest subscriptionRequest, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Long> add(@RequestBody SubscriptionRequest subscriptionRequest, UriComponentsBuilder ucBuilder,@RequestHeader HttpHeaders header) throws AuthenticationException {
+        String token = header.get("Authorization").get(0);
+        if(token == null) throw new AuthenticationException();
+         validationService.validateUser(token);
 
         return subscriptionService.add(subscriptionRequest)
                 .map(
@@ -61,7 +70,8 @@ public class SubscriptionController {
     
 
      @DeleteMapping("/{id}")
-     public ResponseEntity<?> getAllSubscription(@PathVariable("id") long id) {
+     public ResponseEntity<?> getAllSubscription(@PathVariable("id") long id,@RequestHeader HttpHeaders header) throws AuthenticationException {
+         validationService.validateUser(header.get("Authorization").get(0));
          Optional<Long> subscription = Optional.ofNullable(subscriptionService.delete(id));
          return subscription
                  .<ResponseEntity<?>>map(aLong -> new ResponseEntity<>(aLong, HttpStatus.OK))
