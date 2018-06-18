@@ -36,6 +36,8 @@ public class PushNotificationController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Long> add(@RequestBody PushNotificationRequest pushNotificationRequest, UriComponentsBuilder ucBuilder, @RequestHeader HttpHeaders header
     ) throws AuthenticationException {
+        if(header.get("Authorization")==null)
+            throw new AuthenticationException();
         validationService.validateUser(header.get("Authorization").get(0));
         return pushNotificationService.add(pushNotificationRequest)
                 .map(

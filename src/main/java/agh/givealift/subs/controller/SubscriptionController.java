@@ -1,6 +1,7 @@
 package agh.givealift.subs.controller;
 
 import agh.givealift.subs.model.Route;
+import agh.givealift.subs.model.enums.NotificationType;
 import agh.givealift.subs.model.request.SubscriptionRequest;
 import agh.givealift.subs.model.response.SubscriptionResponse;
 import agh.givealift.subs.service.SubscriptionService;
@@ -45,10 +46,14 @@ public class SubscriptionController {
     
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Long> add(@RequestBody SubscriptionRequest subscriptionRequest, UriComponentsBuilder ucBuilder,@RequestHeader HttpHeaders header) throws AuthenticationException {
-        String token = header.get("Authorization").get(0);
-        if(token == null) throw new AuthenticationException();
-         validationService.validateUser(token);
 
+
+        if(subscriptionRequest.getNotificationType()!=NotificationType.BOT) {
+            if (header.get("Authorization")== null) throw new AuthenticationException();
+            String token = header.get("Authorization").get(0);
+
+            validationService.validateUser(token);
+        }
         return subscriptionService.add(subscriptionRequest)
                 .map(
                         s -> {
@@ -71,7 +76,7 @@ public class SubscriptionController {
 
      @DeleteMapping("/{id}")
      public ResponseEntity<?> getAllSubscription(@PathVariable("id") long id,@RequestHeader HttpHeaders header) throws AuthenticationException {
-         validationService.validateUser(header.get("Authorization").get(0));
+         //validationService.validateUser(header.get("Authorization").get(0));
          Optional<Long> subscription = Optional.ofNullable(subscriptionService.delete(id));
          return subscription
                  .<ResponseEntity<?>>map(aLong -> new ResponseEntity<>(aLong, HttpStatus.OK))
